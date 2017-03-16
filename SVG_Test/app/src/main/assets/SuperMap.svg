@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg2"
+   width="1401.8032"
+   height="2983.1895"
+   viewBox="0 0 1401.8032 2983.1895"
+   sodipodi:docname="SuperMap.svg"
+   inkscape:label="roomG"
+   inkscape:version="0.92.1 r15371">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.20353601"
+     inkscape:cx="146.39405"
+     inkscape:cy="1562.5653"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <g
+     id="g3796"
+     inkscape:label="corridor"
+     transform="translate(-202.13168,-3251.5076)">
+    <rect
+       transform="matrix(0.99692719,0.07848806,-0.07781718,0.99893168,0,-12.202661)"
+       y="4021.9502"
+       x="1193.569"
+       height="2084.4031"
+       width="165.02365"
+       id="rect3702"
+       style="fill:#f9f9f9;stroke-width:1.28830659" />
+    <rect
+       transform="matrix(0.99338125,0.1150901,-0.08115746,0.99866479,0,-12.202661)"
+       y="3419.6545"
+       x="1224.2045"
+       height="556.25977"
+       width="241.59468"
+       id="rect3734"
+       style="fill:#f9f9f9;stroke-width:0.94016731" />
+    <rect
+       style="fill:#f9f9f9;stroke-width:1.16406202"
+       id="rect3765"
+       width="77.657593"
+       height="110.7687"
+       x="1448.1881"
+       y="3519.6243"
+       transform="matrix(0.99906835,0.04315585,-0.07732175,0.99700619,0,0)" />
+    <rect
+       transform="matrix(0.99974719,0.02248474,-0.05505105,0.99848354,0,0)"
+       y="4002.4932"
+       x="1359.6422"
+       height="99.358383"
+       width="80.966827"
+       id="rect3787"
+       style="fill:#f9f9f9;stroke-width:1.09756911" />
+  </g>
+  <rect
+     id="rect3682"
+     width="528.31689"
+     height="824.59467"
+     x="883.32678"
+     y="1771.7297"
+     style="fill:#d35f5f;stroke-width:0.98893875"
+     inkscape:transform-center-x="-29.592161"
+     inkscape:transform-center-y="5.9854554"
+     transform="matrix(0.99664526,0.08184264,-0.0720965,0.99739766,0,0)"
+     inkscape:label="roomB" />
+  <rect
+     style="fill:#ffb380;stroke-width:1.00795412"
+     id="rect3698"
+     width="535.53583"
+     height="1103.9551"
+     x="244.89171"
+     y="1775.1654"
+     transform="matrix(0.99700075,0.07739195,-0.08480271,0.99639776,0,0)"
+     inkscape:label="roomA" />
+  <rect
+     style="fill:#ffb380;stroke-width:0.96212125"
+     id="rect3700"
+     width="530.38086"
+     height="1006.3752"
+     x="864.65991"
+     y="743.41302"
+     transform="matrix(0.99478348,0.10200893,-0.06185109,0.99808539,0,0)"
+     inkscape:label="roomV" />
+  <rect
+     style="fill:#ffeeaa;stroke-width:1.02773774"
+     id="rect3704"
+     width="529.27924"
+     height="319.42902"
+     x="918.38831"
+     y="2563.6345"
+     transform="matrix(0.99707727,0.07639967,-0.08516817,0.99636659,0,0)"
+     inkscape:label="ladder" />
+  <g
+     id="g3728"
+     transform="matrix(1.0483786,-0.00816561,0.00776642,1.0028211,-248.4977,-3255.6485)"
+     inkscape:label="roomG">
+    <rect
+       transform="matrix(0.99819503,0.06005568,-0.09341649,0.99562712,0,0)"
+       y="3590.0652"
+       x="760.81799"
+       height="1436.1123"
+       width="512.64539"
+       id="rect3722"
+       style="fill:#ff9955;stroke-width:1.07052827" />
+    <rect
+       transform="matrix(0.9975213,0.07036517,-0.07958753,0.99682788,0,0)"
+       y="3210.3433"
+       x="710.92175"
+       height="371.70184"
+       width="372.22757"
+       id="rect3724"
+       style="fill:#ff9955;stroke-width:1.00653887" />
+  </g>
+  <g
+     id="g3812"
+     inkscape:label="restroomM"
+     transform="translate(-202.13168,-3251.5076)">
+    <rect
+       transform="matrix(0.99829841,0.05831202,-0.07572109,0.99712904,0,0)"
+       y="3497.5742"
+       x="1519.4369"
+       height="109.55371"
+       width="352.52341"
+       id="rect3806"
+       style="fill:#ff6600;stroke-width:1.06788623" />
+    <rect
+       transform="matrix(0.99996609,-0.00823489,-0.07942456,0.99684088,0,0)"
+       y="3715.6274"
+       x="1692.9072"
+       height="131.69669"
+       width="199.25288"
+       id="rect3808"
+       style="fill:#ff6600;stroke-width:1.06413162" />
+  </g>
+  <rect
+     style="fill:#ffaaaa;stroke-width:1.01872814"
+     id="rect3814"
+     width="199.57941"
+     height="318.64185"
+     x="1212.7766"
+     y="489.56693"
+     transform="matrix(0.99841259,0.05632323,-0.05963619,0.99822018,0,0)" />
+  <rect
+     style="fill:#ffaaaa;stroke-width:0.98551303"
+     id="rect3816"
+     width="157.59184"
+     height="86.432251"
+     x="1074.6521"
+     y="686.49139"
+     transform="matrix(0.99686842,0.07907818,-0.07969085,0.99681963,0,0)" />
+  <rect
+     style="fill:#d40000;stroke-width:1.20207691"
+     id="rect3763"
+     width="241.45984"
+     height="346.69571"
+     x="991.63501"
+     y="418.57361"
+     transform="matrix(0.99990814,0.0135541,-0.06498386,0.99788632,0,0)"
+     inkscape:label="lift" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="-1082.2253"
+     y="522.51312"
+     id="text3732"
+     transform="rotate(-84.293663)"><tspan
+       sodipodi:role="line"
+       id="tspan3730"
+       x="-1082.2253"
+       y="522.51312"
+       style="font-size:53.33333206px">Помещение Г</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="1021.5519"
+     y="2750.6931"
+     id="text3708"
+     transform="rotate(4.0362354)"><tspan
+       sodipodi:role="line"
+       id="tspan3706"
+       x="1021.5519"
+       y="2750.6931"
+       style="font-size:53.33333206px;line-height:2.25">Лестница</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:53.33333206px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="-2520.9924"
+     y="491.65591"
+     id="text3712"
+     transform="rotate(-85.938203)"><tspan
+       sodipodi:role="line"
+       id="tspan3710"
+       x="-2520.9924"
+       y="491.65591">Помещение А</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:53.33333206px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="1994.272"
+     y="-1209.2308"
+     id="text3716"
+     transform="rotate(95.399756)"><tspan
+       sodipodi:role="line"
+       id="tspan3714"
+       x="1994.272"
+       y="-1209.2308">Помещение Б</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:53.33333206px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="1071.3033"
+     y="-1187.6754"
+     id="text3720"
+     transform="rotate(95.771448)"><tspan
+       sodipodi:role="line"
+       id="tspan3718"
+       x="1071.3033"
+       y="-1187.6754">Помещение В</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="499.42215"
+     y="-1085.0991"
+     id="text3800"
+     transform="rotate(92.397964)"><tspan
+       sodipodi:role="line"
+       x="499.42215"
+       y="-1085.0991"
+       id="tspan3802">Лифт</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:53.33333206px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="1230.0707"
+     y="453.75461"
+     id="text3820"><tspan
+       sodipodi:role="line"
+       x="1230.0707"
+       y="453.75461"
+       id="tspan3822">М</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:53.33333206px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="1217.0428"
+     y="736.02637"
+     id="text3828"><tspan
+       sodipodi:role="line"
+       x="1217.0428"
+       y="736.02637"
+       id="tspan3830">Ж</tspan></text>
+</svg>

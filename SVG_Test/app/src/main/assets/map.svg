@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="420mm" height="594mm" version="1.1" style="shape-rendering: geometricPrecision; text-rendering: geometricPrecision; fill-rule: evenodd; clip-rule: evenodd; height: 100%; width: 100%;" viewBox="0 0 42000 59400">
+ 
+  <script type="application/ecmascript"> <![CDATA[
+    var last_region;
+ 
+    function click(evt) {
+      if(evt.target.parentNode.getAttribute("class") == "region") {
+        regionClick(evt.target.parentNode);
+      }
+    }
+ 
+    function regionClick(region) {
+      console.log(region.id + " " + region.getAttribute("data-region-id"));
+      
+      if(!!last_region) {
+        last_region.style.opacity= 1;
+      }
+      
+      region.style.opacity= 0.5;
+      last_region = region;
+      Android.regionActivity(region.id);
+    }
+  ]]> </script>
+  
+ <g id="regions" onclick="click(evt)">
+  <g id="Большой регион" class="region" data-region-id="1">
+   <circle cx="150" cy="5150" r="1140" fill="red" />
+  </g>
+  <g id="Малый регион" class="region" data-region-id="2">
+   <circle cx="5000" cy="7000" r="840"  fill="blue" />
+   </g>
+</g>
+
+</svg>

@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements ASScannerCallback{
 
         String deviceInfo = "RSSI: " + result.getRssi() +
                 "  ADDRESS: " + result.getDevice().getAddress() +
-                "  cal." + calRSSI;
+                "  cal." + calRSSI + '\n' + "  distance: " + getDistance(result.getRssi(), Integer.parseInt(calRSSI));
 
         boolean exist = false;
 
@@ -98,10 +98,8 @@ public class MainActivity extends Activity implements ASScannerCallback{
     }
 
     public double getDistance(int RSSI, int calRSSI){
-        return Math.pow(10,(calRSSI-RSSI)/20);
+        return Math.pow(10,(calRSSI-RSSI)/20.0);
     }
 
     //TODO circle drawing
-
-    //TODO getCalRSSI
 }

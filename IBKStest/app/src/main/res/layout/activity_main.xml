@@ -10,9 +10,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.paskevich.ibkstest.MainActivity">
 
+   <!--
    <ListView
        android:id="@+id/devicesList"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
    </ListView>
+   !-->
+
+   <TextView
+       android:id="@+id/posView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content" />
+
 </RelativeLayout>

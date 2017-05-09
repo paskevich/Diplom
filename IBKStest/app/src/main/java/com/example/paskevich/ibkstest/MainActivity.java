@@ -1,105 +1,257 @@
 package com.example.paskevich.ibkstest;
 
-import java.lang.Math;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.TextView;
 
-import com.accent_systems.ibks_sdk.scanner.ASBleScanner;
-import com.accent_systems.ibks_sdk.scanner.ASResultParser;
-import com.accent_systems.ibks_sdk.scanner.ASScannerCallback;
-import com.accent_systems.ibks_sdk.utils.ASUtils;
+public class MainActivity extends Activity {
 
-import org.json.JSONException;
-import org.json.JSONObject;
+    private MyService service;
+    private boolean bound = false;
 
-import java.util.ArrayList;
-import java.util.List;
+    private double x = 0;
 
-public class MainActivity extends Activity implements ASScannerCallback{
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder binder) {
+            MyService.MyBinder myBinder = (MyService.MyBinder) binder;
+            service = myBinder.getService();
+            bound = true;
+        }
 
-    private List<String> scannedDevicesList;
-    private ArrayAdapter<String> adapter;
-
-    private ListView devicesList;
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            bound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setContentView(new TestShowView(this));
         setContentView(R.layout.activity_main);
+        //takeTextPos();
+    }
 
-        devicesList = (ListView)findViewById(R.id.devicesList);
+    @Override
+    protected void onStart(){
+        super.onStart();
+        requestLocationPermissions();
+        Intent intent = new Intent(this, MyService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        //takeTextLog();
+        takeKalmanLog();
+    }
 
-        scannedDevicesList = new ArrayList<>();
-
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, scannedDevicesList);
-        devicesList.setAdapter(adapter);
-
-        new ASBleScanner(this,this).setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-
-        int err = ASBleScanner.startScan();
-        if(err== ASUtils.ERROR_LOCATION_PERMISSION_NOT_GRANTED){
-            requestLocationPermissions();
+    @Override
+    protected void onStop(){
+        super.onStop();
+        if(bound){
+            unbindService(connection);
+            bound = false;
         }
     }
 
     @TargetApi(23)
     public void requestLocationPermissions(){
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
 
-    public void scannedBleDevices(ScanResult result){
-        JSONObject advData = new ASResultParser().getDataFromAdvertising(result);
-        String calRSSI = "";
-
-        try{
-            calRSSI = advData.getString("AdvTxPower");
-        }catch (JSONException e){
-            Log.e("NEO", "TI OBOSRALSYA");
-        }
-
-        String deviceInfo = "RSSI: " + result.getRssi() +
-                "  ADDRESS: " + result.getDevice().getAddress() +
-                "  cal." + calRSSI + '\n' + "  distance: " + getDistance(result.getRssi(), Integer.parseInt(calRSSI));
-
-        boolean exist = false;
-
-        //TODO if device have been lost check
-        //possibly impossible
-
-        for(int i=0; i < scannedDevicesList.size(); i++) {
-            if (scannedDevicesList.get(i).contains(result.getDevice().getAddress())) {
-                exist = true;
-                scannedDevicesList.set(i, deviceInfo);
-                break;
-            }
-        }
-
-        if(!exist){
-            scannedDevicesList.add(deviceInfo);
-        }
-
-        runOnUiThread(new Runnable() {
+    public void takeTextPos() {
+        final TextView posView = (TextView) findViewById(R.id.posView);
+        final android.os.Handler handler = new android.os.Handler();
+        handler.post(new Runnable() {
             @Override
             public void run() {
-                adapter.notifyDataSetChanged();
+                //Point[] pos = null;
+                String[] pos = {};
+                String textPos = "";
+                if (service != null) {
+                    pos = service.getDistances();
+                    Log.d("i tried", "get location");
+                }
+                if (pos.length != 0) {
+                    for (int i = 0; i < pos.length; i++) {
+                        textPos += pos[i] + '\n';
+                    }
+                } else {
+                    textPos = "CRAP!";
+                }
+                Log.d("Position: ", textPos);
+                posView.setText(textPos);
+                handler.postDelayed(this, 2000);
+            }
+        });
+
+    }
+
+    public void takeTextLog() {
+        final TextView posView = (TextView)findViewById(R.id.posView);
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(service!=null && service.scannedMyBleDevices.size()!=0) {
+                    posView.setText("OK");
+                    service.getLevelToLog();
+                }
+                handler.postDelayed(this, 1000);
             }
         });
     }
 
-    public double getDistance(int RSSI, int calRSSI){
-        return Math.pow(10,(calRSSI-RSSI)/20.0);
+    public void takeKalmanLog() {
+        Log.d("Kalman", "is ready");
+        if(service!=null && service.scannedMyBleDevices.size()!=0) {
+            setX(service.scannedMyBleDevices.get(0).getAverage());
+            Log.d("check", "ok");
+        }
+
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("KALMAN", "started");
+                if(service!=null && service.scannedMyBleDevices.size()!=0) {
+                    setX(service.getNextKalman(getX()));
+                }
+                Log.d("KALMAN", Double.toString(getX()));
+                handler.postDelayed(this, 1000);
+            }
+        });
     }
 
-    //TODO circle drawing
+    public synchronized double getX() {
+        return x;
+    }
+
+    public synchronized void setX(double x) {
+        this.x = x;
+    }
+
+    //
+    //I'm sorry for this :c
+    //
+
+    class TestShowView extends SurfaceView implements SurfaceHolder.Callback {
+
+        private final int PIXELS_IN_METER = 60;
+
+        private DrawThread drawThread;
+
+
+        public TestShowView(Context context) {
+            super(context);
+            getHolder().addCallback(this);
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int height, int width) {}
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+            boolean retry = true;
+            drawThread.setRunning(false);
+            while (retry) {
+                try {
+                    drawThread.join();
+                    retry = false;
+                } catch (InterruptedException e) {}
+            }
+        }
+
+        @Override
+        public void surfaceCreated(SurfaceHolder surfaceHolder) {
+            drawThread = new DrawThread(surfaceHolder);
+            drawThread.setRunning(true);
+            drawThread.start();
+        }
+
+        //SURFACE VIEW DRAWING THREAD CLASS
+        class DrawThread extends Thread {
+
+            private boolean running = false;
+            private SurfaceHolder surfaceHolder;
+
+            private Paint p;
+
+            public DrawThread(SurfaceHolder surfaceHolder) {
+                this.surfaceHolder = surfaceHolder;
+                p = new Paint();
+            }
+
+            public void setRunning(boolean running) {
+                this.running = running;
+            }
+
+            @Override
+            public void run() {
+                Canvas canvas;
+                while (running) {
+                    canvas = null;
+                    try {
+                        canvas = surfaceHolder.lockCanvas(null);
+                        if (canvas == null) {
+                            continue;
+                        }
+                        showMeAll(canvas);
+                    } finally {
+                        if (canvas != null) {
+                            surfaceHolder.unlockCanvasAndPost(canvas);
+                        }
+                    }
+                }
+            }
+
+            private void showMeAll(Canvas c) {
+                c.drawARGB(80, 102, 204, 255);
+                p.setColor(Color.RED);
+                p.setStrokeWidth(2);
+
+                double[] center = service.getLocation();
+
+                float cx = (float)center[0];
+                float cy = (float)center[1];
+
+                c.drawCircle(cx+200, cy+200, 10, p);
+
+                p.setColor(Color.BLACK);
+
+                /*c.drawCircle((float)service.getStructure().get("11111111111111111111111111111111")[0],
+                        (float)service.getStructure().get("11111111111111111111111111111111")[1],
+                        10, p);
+                c.drawCircle((float)service.getStructure().get("22222222222222222222222222222222")[0],
+                        (float)service.getStructure().get("22222222222222222222222222222222")[1],
+                        10, p);
+                c.drawCircle((float)service.getStructure().get("33333333333333333333333333333333")[0],
+                        (float)service.getStructure().get("33333333333333333333333333333333")[1], 10, p);*/
+
+                c.drawCircle(0+200,0+200,10, p);
+                c.drawCircle(120+200,0+200, 10, p);
+                c.drawCircle(0+200, 120+200, 10, p);
+                c.drawCircle(120+200, 120+200, 10, p);
+
+                //c.drawText(service.getDistances().toString(), 100, c.getHeight()-100, p);
+                //c.drawText(center.toString(), 100, c.getHeight()-50, p);
+            }
+        }
+
+    }
 }

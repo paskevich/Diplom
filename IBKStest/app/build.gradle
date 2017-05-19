@@ -29,7 +29,7 @@ dependencies {
     //compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     //compile files('fucking_fuck.jar')
     compile project(':mylibrary')
-    compile 'com.accent_systems.ibks-sdk:ibks-sdk:1.0.1'
+    compile 'com.accent_systems.ibks-sdk:ibks-sdk:1.0.2'
     //compile files('libs/ProGAL.jar')
     compile 'com.lemmingapex.trilateration:trilateration:1.0.1'
     compile 'org.kie.modules:org-apache-commons-lang3:6.5.0.Final'

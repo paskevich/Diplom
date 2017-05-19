@@ -43,9 +43,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(new TestShowView(this));
-        setContentView(R.layout.activity_main);
+        setContentView(new TestShowView(this));
+        //setContentView(R.layout.activity_main);
         //takeTextPos();
+        //takeTextLog();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, MyService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
         //takeTextLog();
-        takeKalmanLog();
+        //takeKalmanLog();
     }
 
     @Override
@@ -112,7 +113,7 @@ public class MainActivity extends Activity {
                     posView.setText("OK");
                     service.getLevelToLog();
                 }
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 450);
             }
         });
     }
@@ -219,6 +220,16 @@ public class MainActivity extends Activity {
                     }
                 }
             }
+
+            /*@Override
+            public void run() {
+                Canvas canvas;
+                canvas = surfaceHolder.lockCanvas(null);
+                canvas.drawARGB(80, 102, 204, 255);
+                while(running){
+                    showMeAll(canvas);
+                }
+            }*/
 
             private void showMeAll(Canvas c) {
                 c.drawARGB(80, 102, 204, 255);

@@ -23,7 +23,7 @@ public abstract class MyDevice {
     }
 
     public double getDistance(){
-        return Math.pow(10, (Double.parseDouble(this.mCalRssi)-getAverage())/20.0);
+        return Math.pow(10, (Double.parseDouble(this.mCalRssi)-getAverage())/25.0);
     }
 
     public Date getmLastChange() {

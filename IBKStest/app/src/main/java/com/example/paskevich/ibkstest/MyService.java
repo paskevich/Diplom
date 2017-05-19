@@ -12,12 +12,19 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.accent_systems.ibks_sdk.scanner.*;
+
+import com.accent_systems.ibks_sdk.scanner.ASBleScanner;
 import com.example.mylibrary.*;
+
+import com.example.mylibrary.ASResultParser;
+import com.example.mylibrary.ASScannerCallback;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
 import com.lemmingapex.trilateration.TrilaterationFunction;
 
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,6 +40,7 @@ public class MyService extends Service implements ASScannerCallback {
 
     //List<MyWifiDevice> scannedMyWifiDevices;
 
+    //com.example.mylibrary.ASBleScanner mScanner;
 
     int err;
     HashMap<String, double[]> structure;
@@ -57,8 +65,8 @@ public class MyService extends Service implements ASScannerCallback {
         structure.put("75a31fd03212aab1da99333333333333", new double[]{0,0,COEFF});
         structure.put("75a31fd03212aab1da99444444444444", new double[]{2*COEFF,2*COEFF,COEFF});
 
-        new ASBleScanner(this, this).setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-
+        new com.example.mylibrary.ASBleScanner(this, this)
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
         //
         // useless wifi block
         //
@@ -68,7 +76,7 @@ public class MyService extends Service implements ASScannerCallback {
         //wifiManager.startScan();
         //
 
-        err = ASBleScanner.startScan();
+        err = com.example.mylibrary.ASBleScanner.startScan();
     }
 
     private final IBinder binder = new MyBinder();
@@ -221,6 +229,9 @@ public class MyService extends Service implements ASScannerCallback {
 
         }
 
+        double[][] positions2D = new double[positions.length][2];
+        to2D(positions, distances, positions2D);
+
         /*final int BEACONS_NUM = 3;
         double[] distances = new double[BEACONS_NUM];
         double[][] positions = new double[BEACONS_NUM][3];
@@ -232,7 +243,7 @@ public class MyService extends Service implements ASScannerCallback {
         // used lemmingapex trilateration library
         //
         NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver
-                (new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
+                (new TrilaterationFunction(positions2D, distances), new LevenbergMarquardtOptimizer());
         LeastSquaresOptimizer.Optimum optimum = solver.solve();
         double[] result = optimum.getPoint().toArray();
         Log.d("Service", Arrays.toString(result));
@@ -240,7 +251,16 @@ public class MyService extends Service implements ASScannerCallback {
         return result;
     }
 
-    public String[] getDistances(){
+    public void to2D(double[][] positions, double[] distances, double[][] positions2D) {
+        for (int i = 0; i < distances.length; i++) {
+            distances[i] = Math.sqrt(Math.pow(distances[i], 2) - Math.pow(positions[i][2] - 1.3 * COEFF, 2));
+            for(int j = 0; j < 2; j++) {
+                positions2D[i][j] = positions[i][j];
+            }
+        }
+    }
+
+    public String[] getDistances() {
         String[] distances = new String[scannedMyBleDevices.size()];
         for(int i = 0; i < distances.length; i++){
             distances[i] = Double.toString(scannedMyBleDevices.get(i).getDistance())
@@ -259,7 +279,7 @@ public class MyService extends Service implements ASScannerCallback {
 
     public void deleteIfNoFeedback(){
         for(int i = 0; i < scannedMyBleDevices.size(); i++){
-            if((new Date().getTime() - scannedMyBleDevices.get(i).getmLastChange().getTime()) > 10000){
+            if((new Date().getTime() - scannedMyBleDevices.get(i).getmLastChange().getTime()) > 5000){
                 scannedMyBleDevices.remove(i);
             }
         }
@@ -271,6 +291,7 @@ public class MyService extends Service implements ASScannerCallback {
     HashMap<String, double[]> getStructure(){
         return this.structure;
     }
+
 
     public void getLevelToLog() {
         Log.d("LookRSSI", Double.toString(scannedMyBleDevices.get(0).getAverage()));

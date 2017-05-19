@@ -58,7 +58,7 @@ public class ASBleScanner {
     }
 
     //SET SCAN MODE
-    public static int setScanMode(int ScanMode){
+    public static int setScanMode(int ScanMode) {
         int err = 0;
         if((err = inicializeBluetooth())!=0){
             return err;
@@ -95,7 +95,7 @@ public class ASBleScanner {
         return ASUtils.TASK_OK;
     }
 
-    //INICIALIZE SCAN SETTINGS
+    //INITIALIZE SCAN SETTINGS
     private static int initScanSettings(){
         if(scanner == null || scanSettings == null){
             ScanSettings.Builder scanSettingsBuilder = new ScanSettings.Builder();

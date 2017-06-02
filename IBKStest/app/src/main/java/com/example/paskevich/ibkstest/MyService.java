@@ -50,7 +50,7 @@ public class MyService extends Service implements ASScannerCallback {
     //private WifiScanReceiver wifiReceiver;
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         scannedMyBleDevices = new ArrayList<>();
 
         //scannedMyWifiDevices = new ArrayList<>();
@@ -60,10 +60,10 @@ public class MyService extends Service implements ASScannerCallback {
         // vista -> SHA1 -> 75a31fd03212aab1da99 (namespace for all ble-beacons used in single project)
         //
         structure = new HashMap<>();
-        structure.put("75a31fd03212aab1da99111111111111", new double[]{2*COEFF,0,0});
-        structure.put("75a31fd03212aab1da99222222222222", new double[]{0,2*COEFF,0});
-        structure.put("75a31fd03212aab1da99333333333333", new double[]{0,0,COEFF});
-        structure.put("75a31fd03212aab1da99444444444444", new double[]{2*COEFF,2*COEFF,COEFF});
+        structure.put("75a31fd03212aab1da99111111111111", new double[]{0 * COEFF, 0 * COEFF, 2.3 * COEFF});
+        structure.put("75a31fd03212aab1da99222222222222", new double[]{6.7 * COEFF, 0 * COEFF, 2.3 * COEFF});
+        structure.put("75a31fd03212aab1da99333333333333", new double[]{0 * COEFF, 6.4 * COEFF, 2.3 * COEFF});
+        structure.put("75a31fd03212aab1da99444444444444", new double[]{6.7 * COEFF, 6.4 * COEFF, 2.3 * COEFF});
 
         new com.example.mylibrary.ASBleScanner(this, this)
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
@@ -83,13 +83,12 @@ public class MyService extends Service implements ASScannerCallback {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         //throw new UnsupportedOperationException("Not yet implemented");
         return binder;
     }
 
     public class MyBinder extends Binder {
-        MyService getService(){
+        MyService getService() {
             return MyService.this;
         }
     }
@@ -98,7 +97,7 @@ public class MyService extends Service implements ASScannerCallback {
     // iBKS SDK callback method
     //
     @Override
-    public void scannedBleDevices(ScanResult result){
+    public void scannedBleDevices(ScanResult result) {
 
         //Log.d("Callback", "check");
 
@@ -113,27 +112,27 @@ public class MyService extends Service implements ASScannerCallback {
         //boolean readyToShow = false;
 
         for (MyBleDevice device : scannedMyBleDevices) {
-            if(device.getmAddress().equals(result.getDevice().getAddress())) {
+            if (device.getmAddress().equals(result.getDevice().getAddress())) {
                 exist = true;
                 device.setmLastChange();
 
-                if(device.getmRssi().size() != 3) {
+                if (device.getmRssi().size() != 3) {
                     device.getmRssi().add(result.getRssi());
                 } else {
                     device.getmRssi().add(result.getRssi());
                     device.getmRssi().remove(0);
                 }
 
-                if(device.getmRssi().size() == 3){
+                if (device.getmRssi().size() == 3) {
 
                     //
                     // no idea...
                     //
                     //setViewVList(device);
                     //runOnUiThread(new Runnable() {
-                        //@Override
-                        //public void run() {adapter.notifyDataSetChanged();
-                        //}
+                    //@Override
+                    //public void run() {adapter.notifyDataSetChanged();
+                    //}
                     //});
                     //Log.d("I just", "updated screen");
 
@@ -158,7 +157,7 @@ public class MyService extends Service implements ASScannerCallback {
 
         }
 
-        if(!exist && namespace!=null && namespace.contains("75a31fd03212aab1da99")){
+        if (!exist && namespace != null && namespace.contains("75a31fd03212aab1da99")) {
             MyBleDevice device = new MyBleDevice(result, advData);
             scannedMyBleDevices.add(device);
 
@@ -194,9 +193,9 @@ public class MyService extends Service implements ASScannerCallback {
         return Sphere.getIntersections(sphere1, sphere2, sphere3);
     }*/
 
-    public double[] getLocation(){
-        if (scannedMyBleDevices.size()<4)
-            return new double[]{0,0,0};
+    public double[] getLocation() {
+        if (scannedMyBleDevices.size() < 4)
+            return new double[]{200, 200, 0};
 
         /*double[][] positions = new double[][]{{0,0,0},{0,2,0},{2,0,0}, {2,2,1}};
         double[] distances = new double[]
@@ -208,7 +207,7 @@ public class MyService extends Service implements ASScannerCallback {
 
         ArrayList<double[]> positionsList = new ArrayList<>();
         ArrayList<Double> distancesList = new ArrayList<>();
-        for(int i = 0; i < scannedMyBleDevices.size(); i++){
+        for (int i = 0; i < scannedMyBleDevices.size(); i++) {
             positionsList.add(i, structure.get(scannedMyBleDevices.get(i).getUID()));
             distancesList.add(i, scannedMyBleDevices.get(i).getDistance());
         }
@@ -221,16 +220,16 @@ public class MyService extends Service implements ASScannerCallback {
         //double[][] double_positions = new double[positions.length][positions[0].length];
         double[] distances = new double[distancesList.size()];
 
-        for(int i = 0; i < distances.length; i++){
+        for (int i = 0; i < distances.length; i++) {
             distances[i] = distancesList.get(i).doubleValue();
             //for(int j = 0; j < double_positions[0].length; j++){
-                //double_positions[i][j] = (double) positions[i][j];
+            //double_positions[i][j] = (double) positions[i][j];
             //}
 
         }
 
-        double[][] positions2D = new double[positions.length][2];
-        to2D(positions, distances, positions2D);
+        double[][] positions2D = positions;
+        //to2D(positions, distances, positions2D);
 
         /*final int BEACONS_NUM = 3;
         double[] distances = new double[BEACONS_NUM];
@@ -251,18 +250,21 @@ public class MyService extends Service implements ASScannerCallback {
         return result;
     }
 
+    //
+    //TODO: Jacobian error when distances changes
+    //
     public void to2D(double[][] positions, double[] distances, double[][] positions2D) {
         for (int i = 0; i < distances.length; i++) {
-            distances[i] = Math.sqrt(Math.pow(distances[i], 2) - Math.pow(positions[i][2] - 1.3 * COEFF, 2));
-            for(int j = 0; j < 2; j++) {
-                positions2D[i][j] = positions[i][j];
+            if (distances[i] > positions[i][2] - 1.3 * COEFF) {
+                distances[i] = Math.sqrt(Math.pow(distances[i], 2) - Math.pow(positions[i][2] - 1.3 * COEFF, 2));
             }
+            positions2D[i][2] = 1.3 * COEFF;
         }
     }
 
     public String[] getDistances() {
         String[] distances = new String[scannedMyBleDevices.size()];
-        for(int i = 0; i < distances.length; i++){
+        for (int i = 0; i < distances.length; i++) {
             distances[i] = Double.toString(scannedMyBleDevices.get(i).getDistance())
                     + ' ' + scannedMyBleDevices.get(i).getUID();
         }
@@ -273,13 +275,13 @@ public class MyService extends Service implements ASScannerCallback {
     // useless method now
     // could used by activity to check scan was started successfully
     //
-    public int getErr(){
+    public int getErr() {
         return err;
     }
 
-    public void deleteIfNoFeedback(){
-        for(int i = 0; i < scannedMyBleDevices.size(); i++){
-            if((new Date().getTime() - scannedMyBleDevices.get(i).getmLastChange().getTime()) > 5000){
+    public void deleteIfNoFeedback() {
+        for (int i = 0; i < scannedMyBleDevices.size(); i++) {
+            if ((new Date().getTime() - scannedMyBleDevices.get(i).getmLastChange().getTime()) > 5000) {
                 scannedMyBleDevices.remove(i);
             }
         }
@@ -288,23 +290,30 @@ public class MyService extends Service implements ASScannerCallback {
     //
     // could used by activity
     //
-    HashMap<String, double[]> getStructure(){
+    HashMap<String, double[]> getStructure() {
         return this.structure;
     }
 
-
+    //
+    // Testing block
+    //
     public void getLevelToLog() {
         Log.d("LookRSSI", Double.toString(scannedMyBleDevices.get(0).getAverage()));
     }
 
-    //
-    //TODO: Use Kalman filter in distance computing
-    //
-    public double getNextKalman(double x) {
-        final double KALMAN_COEFF = 0.3;
-        double xx = KALMAN_COEFF * scannedMyBleDevices.get(0).getAverage() + (1-KALMAN_COEFF) * x;
-        return xx;
+    public void getDistanceLog() {
+        Log.d("LookDistance", Double.toString(scannedMyBleDevices.get(0).getDistance()));
     }
+
+    public void getAverageLog() {
+        Log.d("LookRegular", Double.toString(scannedMyBleDevices.get(0).getAverage()));
+        Log.d("LookLinear", Double.toString(scannedMyBleDevices.get(0).getLinAverage()));
+        Log.d("LookExponent", Double.toString(scannedMyBleDevices.get(0).getExpAverage()));
+        Log.d("LookShit", Double.toString(scannedMyBleDevices.get(0).getmRssi().get(scannedMyBleDevices.size() - 1)));
+    }
+    //
+    // End of testing block
+    //
 }
 //
 //useless

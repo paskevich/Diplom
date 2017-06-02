@@ -24,7 +24,7 @@ public class MyBleDevice extends MyDevice{
         }
         catch(JSONException e){
             Log.e("JSONException", "can't read cal. power or UID");
-            this.mCalRssi = "-50";
+            this.mCalRssi = "-49";
         }
 
         this.mRssi = new ArrayList<>();
@@ -34,6 +34,8 @@ public class MyBleDevice extends MyDevice{
         this.mAddress = result.getDevice().getAddress();
 
         this.mLastChange = new Date();
+
+        mLastExp = (double)result.getRssi();
     }
 
     public String getUID() {

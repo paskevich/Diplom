@@ -11,13 +11,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.TextView;
+
+import ProGAL.geom3d.Circle;
 
 public class MainActivity extends Activity {
 
@@ -43,7 +48,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new TestShowView(this));
+        //setContentView(new TestShowView(this));
+        setContentView(new DrawView(this));
         //setContentView(R.layout.activity_main);
         //takeTextPos();
         //takeTextLog();
@@ -75,6 +81,9 @@ public class MainActivity extends Activity {
         }
     }
 
+    //
+    // Testing TextView output
+    //
     public void takeTextPos() {
         final TextView posView = (TextView) findViewById(R.id.posView);
         final android.os.Handler handler = new android.os.Handler();
@@ -103,6 +112,9 @@ public class MainActivity extends Activity {
 
     }
 
+    //
+    // Log output for testing methods from service
+    //
     public void takeTextLog() {
         final TextView posView = (TextView)findViewById(R.id.posView);
         final Handler handler = new Handler();
@@ -111,34 +123,18 @@ public class MainActivity extends Activity {
             public void run() {
                 if(service!=null && service.scannedMyBleDevices.size()!=0) {
                     posView.setText("OK");
-                    service.getLevelToLog();
+                    //service.getLevelToLog();
+                    //service.getDistanceLog();
+                    service.getAverageLog();
                 }
                 handler.postDelayed(this, 450);
             }
         });
     }
 
-    public void takeKalmanLog() {
-        Log.d("Kalman", "is ready");
-        if(service!=null && service.scannedMyBleDevices.size()!=0) {
-            setX(service.scannedMyBleDevices.get(0).getAverage());
-            Log.d("check", "ok");
-        }
-
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("KALMAN", "started");
-                if(service!=null && service.scannedMyBleDevices.size()!=0) {
-                    setX(service.getNextKalman(getX()));
-                }
-                Log.d("KALMAN", Double.toString(getX()));
-                handler.postDelayed(this, 1000);
-            }
-        });
-    }
-
+    //
+    // This is for Exp.Mov.Average.
+    //
     public synchronized double getX() {
         return x;
     }
@@ -147,16 +143,16 @@ public class MainActivity extends Activity {
         this.x = x;
     }
 
-    //
-    //I'm sorry for this :c
-    //
 
+    //
+    // I'm sorry for this :c
+    // SurfaceView realization. Autoupdate screen in spec. thread
+    //
     class TestShowView extends SurfaceView implements SurfaceHolder.Callback {
 
         private final int PIXELS_IN_METER = 60;
 
         private DrawThread drawThread;
-
 
         public TestShowView(Context context) {
             super(context);
@@ -193,6 +189,8 @@ public class MainActivity extends Activity {
 
             private Paint p;
 
+            private long mLastDrawTime;
+
             public DrawThread(SurfaceHolder surfaceHolder) {
                 this.surfaceHolder = surfaceHolder;
                 p = new Paint();
@@ -200,24 +198,33 @@ public class MainActivity extends Activity {
 
             public void setRunning(boolean running) {
                 this.running = running;
+                mLastDrawTime = System.nanoTime() / 1_000_000;
             }
 
             @Override
             public void run() {
                 Canvas canvas;
                 while (running) {
+                    long curTime = System.nanoTime() / 1_000_000;
+                    if((curTime - mLastDrawTime) < 2_000)
+                        continue;
                     canvas = null;
+
                     try {
                         canvas = surfaceHolder.lockCanvas(null);
                         if (canvas == null) {
                             continue;
                         }
-                        showMeAll(canvas);
+                        synchronized (surfaceHolder) {
+                            showMeAll(canvas);
+                        }
                     } finally {
                         if (canvas != null) {
                             surfaceHolder.unlockCanvasAndPost(canvas);
+                            //drawThread.setRunning(false);
                         }
                     }
+                    mLastDrawTime = System.nanoTime() / 1_000_000;
                 }
             }
 
@@ -232,18 +239,21 @@ public class MainActivity extends Activity {
             }*/
 
             private void showMeAll(Canvas c) {
-                c.drawARGB(80, 102, 204, 255);
+                c.drawARGB(80, 255, 255, 255);
                 p.setColor(Color.RED);
                 p.setStrokeWidth(2);
+                p.setStyle(Paint.Style.FILL_AND_STROKE);
 
                 double[] center = service.getLocation();
 
                 float cx = (float)center[0];
                 float cy = (float)center[1];
 
-                c.drawCircle(cx+200, cy+200, 10, p);
+                c.drawCircle(cx+200, cy+200, 5, p);
+
 
                 p.setColor(Color.BLACK);
+
 
                 /*c.drawCircle((float)service.getStructure().get("11111111111111111111111111111111")[0],
                         (float)service.getStructure().get("11111111111111111111111111111111")[1],
@@ -255,14 +265,58 @@ public class MainActivity extends Activity {
                         (float)service.getStructure().get("33333333333333333333333333333333")[1], 10, p);*/
 
                 c.drawCircle(0+200,0+200,10, p);
-                c.drawCircle(120+200,0+200, 10, p);
-                c.drawCircle(0+200, 120+200, 10, p);
-                c.drawCircle(120+200, 120+200, 10, p);
+                c.drawCircle(402+200,0+200, 10, p);
+                c.drawCircle(0+200, 384+200, 10, p);
+                c.drawCircle(402+200, 384+200, 10, p);
+
+                p.setStyle(Paint.Style.STROKE);
+                c.drawRect(190, 190, 612, 594, p);
 
                 //c.drawText(service.getDistances().toString(), 100, c.getHeight()-100, p);
                 //c.drawText(center.toString(), 100, c.getHeight()-50, p);
             }
         }
 
+    }
+
+    //
+    // Update screen in UI thread every 'n' seconds
+    //
+    class DrawView extends View {
+        private Paint p;
+
+        public DrawView(Context context) {
+            super(context);
+            p = new Paint();
+        }
+
+        @Override
+        protected void onDraw(Canvas c) {
+            c.drawARGB(80, 255, 255, 255);
+            p.setColor(Color.RED);
+            p.setStrokeWidth(2);
+            p.setStyle(Paint.Style.FILL_AND_STROKE);
+
+            double[] center = service.getLocation();
+
+            float cx = (float)center[0];
+            float cy = (float)center[1];
+
+            c.drawCircle(cx+200, cy+200, 5, p);
+
+
+            p.setColor(Color.BLACK);
+
+            c.drawCircle(0+200,0+200,10, p);
+            c.drawCircle(402+200,0+200, 10, p);
+            c.drawCircle(0+200, 384+200, 10, p);
+            c.drawCircle(402+200, 384+200, 10, p);
+
+            p.setStyle(Paint.Style.STROKE);
+            c.drawRect(190, 190, 612, 594, p);
+
+            SystemClock.sleep(1_500);
+            invalidate();
+        }
     }
 }
